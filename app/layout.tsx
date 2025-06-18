@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tobito.dev - Tools, Projects & Code Vibes",
+  title: "Tobito.dev - Dev & Creator",
   description: "Hey, I'm Tobi —  I'm mostly making web things. Occasionally making sense.",
 };
 
