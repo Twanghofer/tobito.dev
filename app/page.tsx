@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  ChefHat,
   Lightbulb,
   Sparkles,
   Timer,
@@ -59,7 +58,7 @@ export default function Home() {
               </div>
             </Link>
 
-            <Link
+            {/*   <Link
               href="/apps/recipes"
               className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
             >
@@ -79,7 +78,7 @@ export default function Home() {
                 </div>
                 <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </div>
-            </Link>
+            </Link> */}
           </div>
         </div>
 
