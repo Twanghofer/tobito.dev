@@ -2,22 +2,12 @@
 
 import { api } from "@packages/recipes-backend/convex/_generated/api";
 import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import { FunctionReturnType } from "convex/server";
 import { toast } from "sonner";
 
-interface Recipe {
-  _id: Id<"recipes">;
-  title: string;
-  content: string;
-  tags: string[];
-  imageUrl: string | null;
-  isFavorite?: boolean;
-  externalUrl?: string;
-  _creationTime: number;
-}
-
 interface RecipeListProps {
-  recipes: Recipe[];
+  recipes: FunctionReturnType<typeof api.recipes.getPublicRecipes>;
   onViewRecipe: (recipeId: Id<"recipes">) => void;
   onEditRecipe: (recipeId: Id<"recipes">) => void;
   hasFilters: boolean;
@@ -35,6 +25,7 @@ export function RecipeList({
   isLoggedIn,
   currentView,
 }: RecipeListProps) {
+  const loggedInUser = useQuery(api.auth.loggedInUser);
   const toggleFavorite = useMutation(api.recipes.toggleFavorite);
   const deleteRecipe = useMutation(api.recipes.deleteRecipe);
 
@@ -103,16 +94,16 @@ export function RecipeList({
           className="bg-card rounded-lg shadow-sm border border-border overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300"
         >
           {/* Recipe Image */}
-          {recipe.imageUrl && (
-            <div className="aspect-video bg-muted overflow-hidden">
+          <div className="aspect-video bg-muted overflow-hidden">
+            {recipe.imageUrl && (
               <img
                 src={recipe.imageUrl}
                 alt={recipe.title}
                 className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
                 onClick={() => onViewRecipe(recipe._id)}
               />
-            </div>
-          )}
+            )}
+          </div>
 
           <div className="p-4">
             {/* Title and Favorite */}
@@ -123,7 +114,7 @@ export function RecipeList({
               >
                 {recipe.title}
               </h3>
-              {currentView === "my" && isLoggedIn && (
+              {isLoggedIn && loggedInUser?._id === recipe.authorId && (
                 <button
                   onClick={() => handleToggleFavorite(recipe._id)}
                   className={`ml-2 p-1 rounded ${
@@ -205,7 +196,7 @@ export function RecipeList({
               <span className="text-xs text-muted-foreground">
                 {new Date(recipe._creationTime).toLocaleDateString()}
               </span>
-              {currentView === "my" && isLoggedIn && (
+              {isLoggedIn && loggedInUser?._id === recipe.authorId && (
                 <div className="flex gap-2">
                   <button
                     onClick={() => onEditRecipe(recipe._id)}
