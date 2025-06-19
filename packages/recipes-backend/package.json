@@ -1,0 +1,17 @@
+{
+  "name": "@packages/recipes-backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "convex dev",
+    "lint": "tsc -p convex -noEmit --pretty false && tsc -p . -noEmit --pretty false && convex dev --once"
+  },
+  "dependencies": {
+    "@convex-dev/auth": "^0.0.80",
+    "convex": "^1.24.2"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2"
+  }
+}

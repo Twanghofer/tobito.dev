@@ -1,5 +1,13 @@
-import { ArrowRight, Lightbulb, Sparkles, Timer, User, Wrench } from 'lucide-react';
-import Link from 'next/link';
+import {
+  ArrowRight,
+  ChefHat,
+  Lightbulb,
+  Sparkles,
+  Timer,
+  User,
+  Wrench,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -11,44 +19,68 @@ export default function Home() {
             <Sparkles className="w-4 h-4" />
             Welcome to my dev playground
           </div>
-          
+
           <h1 className="text-4xl leading-tight md:text-6xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
             Hey, I'm Tobi
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          I'm mostly making web things. Occasionally making sense.
+            I'm mostly making web things. Occasionally making sense.
           </p>
         </div>
 
-        {/* Live Tool Section */}
+        {/* Live Tools Section */}
         <div className="mb-16">
           <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-            <Timer className="w-6 h-6 text-primary" />
-            My latest addition
+            <Wrench className="w-6 h-6 text-primary" />
+            My latest additions
           </h2>
-          
-          <Link 
-            href="/tools/interval-timer" 
-            className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Timer className="w-6 h-6 text-primary" />
+
+          <div className="space-y-4">
+            <Link
+              href="/tools/interval-timer"
+              className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Timer className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                      ⏱️ Interval Timer
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Vibe-coded and fully functional
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                    ⏱️ Interval Timer
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Vibe-coded and fully functional
-                  </p>
-                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </div>
-              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-            </div>
-          </Link>
+            </Link>
+
+            <Link
+              href="/apps/recipes"
+              className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <ChefHat className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                      🍳 Recipe Collection
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Store and organize your favorite recipes
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Placeholder Sections Grid */}
@@ -105,4 +137,4 @@ export default function Home() {
       </div>
     </div>
   );
-} 
+}
