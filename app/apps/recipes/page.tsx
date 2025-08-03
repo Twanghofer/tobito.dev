@@ -23,9 +23,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/20">
       <header className="sticky top-0 z-10 bg-card/80 backdrop-blur-sm h-16 flex justify-between items-center border-b border-border shadow-sm px-4">
-        <h2 className="text-xl font-semibold text-primary">
-          Recipe Collection
-        </h2>
+        <h2 className="text-xl font-semibold text-primary">MyRecipes</h2>
         <div className="flex items-center gap-4">
           {loggedInUser === undefined ? (
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>

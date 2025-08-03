@@ -32,9 +32,7 @@ export function AuthPage({ onBack }: AuthPageProps) {
           </div>
         )}
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-2">
-            Recipe Collection
-          </h2>
+          <h2 className="text-3xl font-bold text-foreground mb-2">MyRecipes</h2>
           <p className="text-muted-foreground mb-8">
             Your personal cooking companion
           </p>

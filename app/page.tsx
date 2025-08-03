@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  ChefHat,
   Lightbulb,
   Sparkles,
   Timer,
@@ -32,6 +33,28 @@ export default function Home() {
 
           <div className="space-y-4">
             <Link
+              href="/apps/recipes"
+              className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <ChefHat className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                      🍳 MyRecipes
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Store and organize your favorite recipes (Beta)
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+              </div>
+            </Link>
+
+            <Link
               href="/tools/interval-timer"
               className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
             >
@@ -52,28 +75,6 @@ export default function Home() {
                 <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </div>
             </Link>
-
-            {/*   <Link
-              href="/apps/recipes"
-              className="group block bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <ChefHat className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                      🍳 Recipe Collection
-                    </h3>
-                    <p className="text-muted-foreground">
-                      Store and organize your favorite recipes
-                    </p>
-                  </div>
-                </div>
-                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-              </div>
-            </Link> */}
           </div>
         </div>
 
