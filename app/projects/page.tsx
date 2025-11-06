@@ -122,11 +122,11 @@ export default function Projects() {
             return (
               <div
                 key={app.href}
-                className="group relative w-full flex flex-col items-center gap-2.5 transition-transform duration-200 hover:scale-105 active:scale-95"
+                className="group relative w-full flex flex-col items-center gap-2.5 transition-transform duration-300 hover:scale-105 active:scale-95"
               >
                 <div
                   aria-hidden="true"
-                  className={`relative w-full  aspect-square bg-gradient-to-br ${app.backgroundColor} rounded-4xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-200`}
+                  className={`relative w-full  aspect-square bg-gradient-to-br ${app.backgroundColor} rounded-4xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:rounded-3xl duration-300`}
                 >
                   <Icon className="size-7/12 text-white" />
                   {app.favorite && (
