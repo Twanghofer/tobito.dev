@@ -11,6 +11,10 @@ export default function Home() {
       name: "About Me",
       href: "/about",
     },
+    {
+      name: "Contact",
+      href: "mailto:hello@tobito.dev?subject=Hello%20from%20tobito.dev&body=Hey%20Tobi%2C%0A%0AI%20just%20visited%20your%20website%20and%20wanted%20to%20reach%20out...%0A%0ALooking%20forward%20to%20hearing%20from%20you%21",
+    },
   ];
 
   return (
