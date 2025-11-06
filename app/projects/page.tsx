@@ -10,7 +10,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Projects - Tobito.dev",
+  title: "Projects - tobito.dev",
   description: "Projects I've worked on",
 };
 

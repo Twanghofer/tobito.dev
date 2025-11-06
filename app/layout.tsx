@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tobito.dev - Dev & Creator",
+  title: "tobito.dev - Dev & Creator",
   description:
     "Hey, I'm Tobi —  I'm mostly making web things. Occasionally making sense.",
 };
