@@ -85,7 +85,7 @@ export default function Projects() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
+      <div className="container mx-auto px-4 md:px-6 py-16 max-w-4xl">
         <div>
           <Link
             href="/"
@@ -122,37 +122,40 @@ export default function Projects() {
           )}
         </div>
 
-        <div className="grid mt-10 grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(min(9rem,15.5vw),1fr))] gap-8 justify-items-center">
+        <div className="grid mt-10 grid-cols-3 gap-2 lg:gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(10rem,19%),1fr))] justify-items-center">
           {sortedApps.map((app) => {
             const Icon = app.icon;
             return (
               <div
                 key={app.href}
-                className="group relative w-full flex flex-col items-center gap-2.5 transition-transform duration-300 hover:scale-105 active:scale-95"
+                className="group relative w-full flex flex-col  gap-2 transition-transform duration-300 hover:scale-105 active:scale-95"
               >
-                <div
-                  aria-hidden="true"
-                  className={`relative w-full  aspect-square bg-gradient-to-br ${app.backgroundColor} rounded-4xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:rounded-3xl duration-300`}
-                >
-                  <Icon className="size-7/12 text-white" />
-                  {app.favorite && (
-                    <div className="absolute top-2.5 border-2 right-2.5 translate-x-1/2 -translate-y-1/2 size-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <Star className="size-5 fill-yellow-500 text-yellow-500" />
-                    </div>
-                  )}
-                  {app.vibeCoded && (
-                    <div
-                      className={`absolute top-2.5 border-2 ${app.favorite ? "left-2.5 -translate-x-1/2" : "right-2.5 translate-x-1/2"} -translate-y-1/2 size-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center`}
-                    >
-                      <Sparkles className="size-5 text-muted-foreground" />
-                    </div>
-                  )}
+                <div className="px-2 lg:px-4">
+                  <div
+                    aria-hidden="true"
+                    className={`relative w-full aspect-square bg-gradient-to-br ${app.backgroundColor} rounded-3xl lg:rounded-4xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:rounded-3xl duration-300`}
+                  >
+                    <Icon className="size-7/12 text-white" />
+                    {app.favorite && (
+                      <div className="absolute top-2.5 border-2 right-2.5 translate-x-1/2 -translate-y-1/2 size-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <Star className="size-5 fill-yellow-500 text-yellow-500" />
+                      </div>
+                    )}
+                    {app.vibeCoded && (
+                      <div
+                        className={`absolute top-2.5 border-2 ${app.favorite ? "left-2.5 -translate-x-1/2" : "right-2.5 translate-x-1/2"} -translate-y-1/2 size-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center`}
+                      >
+                        <Sparkles className="size-5 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
                 </div>
+
                 <Link
                   href={app.href}
-                  className="text-base sm:text-lg font-medium text-foreground group-hover:text-primary transition-colors text-center max-w-[140px] truncate"
+                  className="text-base sm:text-lg font-medium text-foreground group-hover:text-primary transition-colors text-center"
                 >
-                  <h2>{app.name}</h2>
+                  <h2 className="truncate">{app.name}</h2>
 
                   {app.favorite && <span className="sr-only">- Favorite</span>}
                   {app.vibeCoded && (
