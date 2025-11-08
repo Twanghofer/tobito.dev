@@ -11,7 +11,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Projects - tobito.dev",
-  description: "Projects I've worked on",
+  description:
+    "Explore the projects I've built — polished products, experiments, and vibe-coded tools that showcase what I love to create.",
 };
 
 const apps = [
@@ -96,9 +97,6 @@ const sortedApps = [...apps].sort((a, b) => {
 });
 
 export default function Projects() {
-  const vibeCodedApps = apps.filter((app) => app.vibeCoded);
-  const favoriteApps = apps.filter((app) => app.favorite);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="container mx-auto px-4 md:px-6 py-16 max-w-7xl">
@@ -113,9 +111,14 @@ export default function Projects() {
           <h1 className="text-4xl leading-tight md:text-6xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
             Projects
           </h1>
+          <p className="mt-3 max-w-3xl text-lg leading-normal text-muted-foreground">
+            A curated set of things I&apos;ve built — ship-ready products,
+            community tools, and vibe-coded experiments that capture what
+            I&apos;m exploring right now.
+          </p>
         </div>
 
-        <div className="grid mt-10 gap-6 sm:grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] ">
+        <div className="grid mt-11 gap-6 sm:grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] ">
           {sortedApps.map((app) => {
             const Icon = app.icon;
             return (
