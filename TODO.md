@@ -1,0 +1,2 @@
+- Add FJ configurator when public
+- Clean up MyRecipes

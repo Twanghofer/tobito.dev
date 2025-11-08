@@ -9,8 +9,6 @@ import {
 import { Metadata } from "next";
 import Link from "next/link";
 
-// TODO: Add FJ configurator when public
-
 export const metadata: Metadata = {
   title: "Projects - tobito.dev",
   description:
