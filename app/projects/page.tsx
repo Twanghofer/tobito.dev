@@ -20,6 +20,8 @@ const apps = [
     href: "https://travoapp.com",
     backgroundColor: "bg-[#2094F3]",
     favorite: true,
+    description:
+      "A social travel platform connecting like-minded travelers through authentic group trips. Built with Expo, Convex & Clerk",
     icon: (props: LucideProps) => (
       <svg
         width="24"
@@ -59,14 +61,20 @@ const apps = [
     backgroundColor: "from-orange-500 to-red-500",
     favorite: false,
     vibeCoded: true,
+    description:
+      "Full-stack recipe hub with Convex auth, community recipes, personal collections, tagging and search.",
+    image:
+      "https://insightful-eel-570.convex.cloud/api/storage/f31f8980-925b-4dcc-863a-276039c83ed5",
   },
   {
     name: "Interval Timer",
     href: "/tools/interval-timer",
     icon: Timer,
-    backgroundColor: "from-blue-500 to-cyan-500",
+    backgroundColor: "from-destructive to-destructive/50",
     favorite: false,
     vibeCoded: true,
+    description:
+      "Minimalist workout timer with sharable presets and quick adjustments for any routine.",
   },
 ];
 
@@ -85,7 +93,7 @@ export default function Projects() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 md:px-6 py-16 max-w-4xl">
+      <div className="container mx-auto px-4 md:px-6 py-16 max-w-7xl">
         <div>
           <Link
             href="/"
@@ -99,69 +107,64 @@ export default function Projects() {
           </h1>
         </div>
 
-        {/* Legend */}
-        <div className="mt-5 flex flex-col gap-2">
-          {favoriteApps.length > 0 && (
-            <div className="flex items-center gap-2 text-base text-muted-foreground">
-              <Star
-                className="size-4 fill-yellow-500 text-yellow-500"
-                aria-label="Star"
-              />
-              <span>
-                <b>Favorite</b> — projects I'm particularly proud of
-              </span>
-            </div>
-          )}
-          {vibeCodedApps.length > 0 && (
-            <div className="flex items-center gap-2 text-base text-muted-foreground">
-              <Sparkles className="size-4" aria-label="Sparkles" />
-              <span>
-                <b>Vibe coded</b> — quick experiments and prototypes
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div className="grid mt-10 grid-cols-3 gap-2 lg:gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(10rem,19%),1fr))] justify-items-center">
+        <div className="grid mt-10 gap-6 sm:grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] ">
           {sortedApps.map((app) => {
             const Icon = app.icon;
             return (
               <div
                 key={app.href}
-                className="group relative w-full flex flex-col  gap-2 transition-transform duration-300 hover:scale-105 active:scale-95"
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border/40 bg-card/60 backdrop-blur-lg hover:-translate-y-2 shadow-lg transition-all duration-500  hover:border-border/70 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <div className="px-2 lg:px-4">
-                  <div
-                    aria-hidden="true"
-                    className={`relative w-full aspect-square bg-gradient-to-br ${app.backgroundColor} rounded-3xl lg:rounded-4xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:rounded-3xl duration-300`}
-                  >
-                    <Icon className="size-7/12 text-white" />
+                <div className="relative h-48 w-full overflow-hidden">
+                  {app.image ? (
+                    <>
+                      <img
+                        src={app.image}
+                        alt={app.name}
+                        className="object-cover absolute inset-0 size-full"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-bl via-background/20 from-background/80 to-transparent" />
+                    </>
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      className={`absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br ${app.backgroundColor}`}
+                    >
+                      <Icon className="h-16 w-16 text-white drop-shadow-xl" />
+                    </div>
+                  )}
+
+                  <div className="absolute top-4 right-4 flex flex-wrap gap-2">
                     {app.favorite && (
-                      <div className="absolute top-2.5 border-2 right-2.5 translate-x-1/2 -translate-y-1/2 size-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center">
-                        <Star className="size-5 fill-yellow-500 text-yellow-500" />
-                      </div>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-200/80 px-3 py-1 text-xs font-semibold text-amber-800 shadow-sm backdrop-blur">
+                        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                        Favorite
+                      </span>
                     )}
                     {app.vibeCoded && (
-                      <div
-                        className={`absolute top-2.5 border-2 ${app.favorite ? "left-2.5 -translate-x-1/2" : "right-2.5 translate-x-1/2"} -translate-y-1/2 size-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center`}
-                      >
-                        <Sparkles className="size-5 text-muted-foreground" />
-                      </div>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-sm backdrop-blur">
+                        <Sparkles className="h-3.5 w-3.5" />
+                        Vibe coded
+                      </span>
                     )}
                   </div>
                 </div>
 
-                <Link
-                  href={app.href}
-                  className="text-base sm:text-lg font-medium text-foreground group-hover:text-primary transition-colors text-center"
-                >
-                  <h2 className="truncate">{app.name}</h2>
-
-                  {app.favorite && <span className="sr-only">- Favorite</span>}
-                  {app.vibeCoded && (
-                    <span className="sr-only">- Vibe coded</span>
+                <div className="flex flex-1 flex-col gap-3 px-6 pt-5 pb-8">
+                  <div className="flex items-start justify-between gap-4">
+                    <Link href={app.href}>
+                      <h2 className="text-xl font-semibold text-foreground transition-colors group-hover:text-primary">
+                        {app.name}
+                      </h2>
+                    </Link>
+                    <ArrowLeft className="h-5 w-5 -scale-x-100 text-muted-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-primary" />
+                  </div>
+                  {app.description && (
+                    <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                      {app.description}
+                    </p>
                   )}
-                </Link>
+                </div>
 
                 <Link
                   href={app.href}
