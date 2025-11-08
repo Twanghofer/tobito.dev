@@ -55,11 +55,20 @@ const apps = [
     ),
   },
   {
+    name: "LoL Arena Tracker",
+    href: "https://lol-arena.tobito.dev",
+    backgroundColor: "from-[#060A17] to-[#561325]",
+    description:
+      "A web app using the Riot Games API to track the performance of a LoL Arena player. Built with Next.js & Convex",
+    icon: () => (
+      <img src="https://lol-arena.tobito.dev/favicon.svg" className="size-24" />
+    ),
+  },
+  {
     name: "MyRecipes",
     href: "/apps/recipes",
     icon: ChefHat,
     backgroundColor: "from-orange-500 to-red-500",
-    favorite: false,
     vibeCoded: true,
     description:
       "Full-stack recipe hub with Convex auth, community recipes, personal collections, tagging and search.",
@@ -71,7 +80,6 @@ const apps = [
     href: "/tools/interval-timer",
     icon: Timer,
     backgroundColor: "from-destructive to-destructive/50",
-    favorite: false,
     vibeCoded: true,
     description:
       "Minimalist workout timer with sharable presets and quick adjustments for any routine.",
@@ -123,14 +131,14 @@ export default function Projects() {
                         alt={app.name}
                         className="object-cover absolute inset-0 size-full"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-bl via-background/20 from-background/80 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t via-background/20 from-background/90 to-transparent" />
                     </>
                   ) : (
                     <div
                       aria-hidden="true"
                       className={`absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br ${app.backgroundColor}`}
                     >
-                      <Icon className="h-16 w-16 text-white drop-shadow-xl" />
+                      <Icon className="size-20 text-white drop-shadow-xl" />
                     </div>
                   )}
 
