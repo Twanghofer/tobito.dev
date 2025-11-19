@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const apps = [
   {
     name: "Travo",
-    href: "https://travoapp.com",
+    href: "https://app.travoapp.com",
     backgroundColor: "bg-[#2094F3]",
     favorite: true,
     description:
