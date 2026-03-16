@@ -64,6 +64,7 @@ const apps = [
     icon: () => (
       <img src="https://lol-arena.tobito.dev/favicon.svg" className="size-24" />
     ),
+    favorite: true,
   },
   {
     name: "MyRecipes",
@@ -124,7 +125,7 @@ export default function Projects() {
             return (
               <div
                 key={app.href}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border/40 bg-card/60 backdrop-blur-lg hover:-translate-y-2 shadow-lg transition-all duration-500  hover:border-border/70 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border/40 bg-card/60 backdrop-blur-lg hover:-translate-y-2 shadow-lg transition-all duration-400  hover:border-border/70 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <div className="relative h-48 w-full overflow-hidden">
                   {app.image ? (
@@ -168,7 +169,7 @@ export default function Projects() {
                         {app.name}
                       </h2>
                     </Link>
-                    <ArrowLeft className="h-5 w-5 -scale-x-100 text-muted-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-primary" />
+                    <ArrowLeft className="h-5 w-5 -scale-x-100 text-muted-foreground transition-all duration-400 group-hover:translate-x-1 group-hover:text-primary" />
                   </div>
                   {app.description && (
                     <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
