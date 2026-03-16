@@ -22,7 +22,7 @@ const apps = [
     backgroundColor: "bg-[#2094F3]",
     favorite: true,
     description:
-      "A social travel platform connecting like-minded travelers through authentic group trips. Built with Expo, Convex & Clerk",
+      "A social travel platform connecting like-minded travelers. Universal app for web, Android & iOS. Built with Expo, Convex & Clerk",
     icon: (props: LucideProps) => (
       <svg
         width="24"
