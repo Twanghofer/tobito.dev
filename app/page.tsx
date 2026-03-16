@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -21,16 +21,6 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <div className="text-center mb-32">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Sparkles className="w-4 h-4" />
-            <span>
-              Welcome to{" "}
-              <b>
-                <i>tobito.dev</i>
-              </b>
-            </span>
-          </div>
-
           <h1 className="text-5xl leading-tight md:text-7xl lg:text-8xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
             Hey, I'm Tobi
           </h1>
@@ -41,8 +31,8 @@ export default function Home() {
             {links.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="group block">
-                  <div className="flex items-center justify-between py-4 border-b border-border hover:border-primary/50 transition-colors">
-                    <h2 className="text-3xl leading-tight md:text-5xl font-bold relative">
+                  <div className="relative flex items-center justify-between py-4 border-b border-border after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary/80 after:origin-left after:scale-x-0 after:transition-transform after:duration-400 after:ease-in-out group-hover:after:scale-x-100">
+                    <h2 className="text-3xl leading-tight md:text-5xl font-bold relative transition-transform duration-300 ease-out group-hover:translate-x-2">
                       <span className="bg-gradient-to-r from-muted-foreground via-foreground/80 to-muted-foreground bg-clip-text text-transparent">
                         {link.name}
                       </span>
@@ -53,7 +43,7 @@ export default function Home() {
                         {link.name}
                       </span>
                     </h2>
-                    <ArrowRight className="w-6 h-6 md:w-8 md:h-8 text-muted-foreground group-hover:text-primary group-hover:translate-x-2 transition-all" />
+                    <ArrowRight className="w-6 h-6 md:w-8 md:h-8 text-muted-foreground group-hover:text-primary group-hover:translate-x-2 transition-all duration-300" />
                   </div>
                 </Link>
               </li>
