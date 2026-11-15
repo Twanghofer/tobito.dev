@@ -1,6 +1,5 @@
 import { NewSignInForm } from "./NewSignInForm";
 import { RecipeContainer } from "./RecipeContainer";
-import { RecipeLogo } from "./RecipeLogo";
 import { recipeBtnGhost } from "./recipeUi";
 
 interface AuthPageProps {
@@ -34,16 +33,6 @@ export function AuthPage({ onBack }: AuthPageProps) {
             Back to recipes
           </button>
         )}
-
-        <div className="flex flex-col items-center text-center">
-          <RecipeLogo className="mb-4 size-12" />
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-            MyRecipes
-          </h2>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            Your personal cooking companion
-          </p>
-        </div>
 
         <div className="recipes-card rounded-xl p-6 sm:p-7">
           <NewSignInForm />

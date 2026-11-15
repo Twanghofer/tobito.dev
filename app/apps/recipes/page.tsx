@@ -13,10 +13,16 @@ import { SignOutButton } from "./_components/SignOutButton";
 export default function App() {
   const loggedInUser = useQuery(api.auth.loggedInUser);
   const [showAuthPage, setShowAuthPage] = useState(false);
+  const [appKey, setAppKey] = useState(0);
+
+  const goHome = () => {
+    setShowAuthPage(false);
+    setAppKey((key) => key + 1);
+  };
 
   if (showAuthPage) {
     return (
-      <RecipeShell showHeader={false}>
+      <RecipeShell onHome={goHome}>
         <AuthPage onBack={() => setShowAuthPage(false)} />
       </RecipeShell>
     );
@@ -42,9 +48,9 @@ export default function App() {
     );
 
   return (
-    <RecipeShell headerRight={headerRight}>
+    <RecipeShell headerRight={headerRight} onHome={goHome}>
       <main className="flex-1">
-        <RecipeApp onShowAuth={() => setShowAuthPage(true)} />
+        <RecipeApp key={appKey} onShowAuth={() => setShowAuthPage(true)} />
       </main>
     </RecipeShell>
   );

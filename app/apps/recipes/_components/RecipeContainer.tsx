@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 const sizeClass = {
   wide: "max-w-6xl",
-  reading: "max-w-3xl",
+  reading: "max-w-4xl",
   narrow: "max-w-md",
 } as const;
 
