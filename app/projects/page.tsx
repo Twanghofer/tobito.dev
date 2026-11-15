@@ -1,6 +1,7 @@
-import { ArrowLeft, MapPinned, Star } from "lucide-react";
+import { ArrowLeft, MapPinned, Star, type LucideIcon } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
+import type { ComponentType } from "react";
 
 export const metadata: Metadata = {
   title: "Projects - tobito.dev",
@@ -8,7 +9,18 @@ export const metadata: Metadata = {
     "Explore the projects I've built — real products and apps that showcase what I love to create.",
 };
 
-const apps = [
+type App = {
+  name: string;
+  backgroundColor: string;
+  description: string;
+  icon: LucideIcon | ComponentType<{ className?: string }>;
+  href?: string;
+  favorite?: boolean;
+  comingSoon?: boolean;
+  image?: string;
+};
+
+const apps: App[] = [
   {
     name: "Project Vivia",
     backgroundColor: "from-[#F47F6B] to-[#F47F6B]",
