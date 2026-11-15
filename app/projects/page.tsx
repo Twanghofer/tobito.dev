@@ -42,6 +42,21 @@ const apps: App[] = [
     favorite: true,
   },
   {
+    name: "Draftlane",
+    href: "https://lol-draftlane.tobito.dev",
+    backgroundColor: "from-[#1a1f1e] to-[#2f6f6b]",
+    description:
+      "Personalized champ-select recommendations for ranked — your pool, your stats, this board, with explainable reasons.",
+    icon: () => (
+      <img
+        src="https://lol-draftlane.tobito.dev/favicon.svg"
+        alt=""
+        className="size-24 rounded-2xl"
+      />
+    ),
+  },
+
+  {
     name: "MyRecipes",
     href: "/apps/recipes",
     icon: () => (
