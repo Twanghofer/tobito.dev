@@ -55,12 +55,7 @@ export default function Tools() {
                     <Icon className="size-20 text-white drop-shadow-xl" />
                   </div>
 
-                  <div className="absolute top-4 right-4 flex flex-wrap gap-2">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary shadow-sm backdrop-blur">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Vibe coded
-                    </span>
-                  </div>
+                  <div className="absolute top-4 right-4 flex flex-wrap gap-2"></div>
                 </div>
 
                 <div className="flex flex-1 flex-col gap-3 px-6 pt-5 pb-8">
