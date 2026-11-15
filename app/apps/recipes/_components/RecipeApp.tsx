@@ -2,7 +2,7 @@
 
 import { api } from "@packages/recipes-backend/convex/_generated/api";
 import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
 import type { FunctionReturnType } from "convex/server";
 import { useEffect, useState } from "react";
 import { RecipeContainer } from "./RecipeContainer";

@@ -12,7 +12,7 @@ const apps = [
   {
     name: "Project Vivia",
     backgroundColor: "from-[#F47F6B] to-[#F47F6B]",
-    favorite: true,
+    favorite: false,
     comingSoon: true,
     description:
       "Day-by-day itineraries from real travelers — discover what's actually worth seeing in each destination, beyond the promoted spots.",
@@ -43,9 +43,26 @@ const apps = [
     description:
       "Full-stack recipe hub with Convex auth, community recipes, personal collections, tagging and search.",
   },
+  {
+    name: "Product Configurator",
+    href: "https://selector.fritsjurgens.com/",
+    backgroundColor: "from-[#F7F7F7] to-[#EBEBEB]",
+    favorite: true,
+    description:
+      "Interactive product configurator for pivot door systems — configure hinges, dimensions, and finishes with live visualization.",
+    icon: () => (
+      <img
+        src="https://selector.fritsjurgens.com/icon-192x192.png"
+        alt=""
+        className="size-24 rounded-2xl"
+      />
+    ),
+  },
 ];
 
 const sortedApps = [...apps].sort((a, b) => {
+  if (a.comingSoon && !b.comingSoon) return -1;
+  if (!a.comingSoon && b.comingSoon) return 1;
   if (a.favorite && !b.favorite) return -1;
   if (!a.favorite && b.favorite) return 1;
   return 0;
@@ -111,7 +128,7 @@ export default function Projects() {
                       </span>
                     )}
                     {app.comingSoon && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-sky-200/80 px-3 py-1 text-xs font-semibold text-sky-900 shadow-sm backdrop-blur">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-zinc-700 shadow-sm backdrop-blur">
                         Coming Soon
                       </span>
                     )}

@@ -2,7 +2,8 @@
 
 import { api } from "@packages/recipes-backend/convex/_generated/api";
 import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
+import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { formatTag } from "./formatTag";
 import { RecipeContainer } from "./RecipeContainer";

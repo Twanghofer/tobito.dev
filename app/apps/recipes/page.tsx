@@ -1,8 +1,8 @@
 "use client";
 
 import { api } from "@packages/recipes-backend/convex/_generated/api";
-import { useQuery } from "convex/react";
-import { useState } from "react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
+import { useEffect, useState } from "react";
 import { AuthPage } from "./_components/AuthPage";
 import { RecipeApp } from "./_components/RecipeApp";
 import { RecipeShell } from "./_components/RecipeShell";
@@ -15,12 +15,19 @@ export default function App() {
   const [showAuthPage, setShowAuthPage] = useState(false);
   const [appKey, setAppKey] = useState(0);
 
+  // Leave the auth screen once Convex auth resolves after sign-in / sign-up.
+  useEffect(() => {
+    if (loggedInUser) {
+      setShowAuthPage(false);
+    }
+  }, [loggedInUser]);
+
   const goHome = () => {
     setShowAuthPage(false);
     setAppKey((key) => key + 1);
   };
 
-  if (showAuthPage) {
+  if (showAuthPage && !loggedInUser) {
     return (
       <RecipeShell onHome={goHome}>
         <AuthPage onBack={() => setShowAuthPage(false)} />

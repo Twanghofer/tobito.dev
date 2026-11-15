@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 const sizeClass = {
   wide: "max-w-6xl",
   reading: "max-w-4xl",
+  form: "max-w-lg",
   narrow: "max-w-md",
 } as const;
 
