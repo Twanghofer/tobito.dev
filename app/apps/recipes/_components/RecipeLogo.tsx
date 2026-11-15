@@ -3,7 +3,7 @@ interface RecipeLogoProps {
   title?: string;
 }
 
-/** Simple chef-hat mark for MyRecipes branding. */
+/** Chef-hat mark — orange brand accent on cool neutrals. */
 export function RecipeLogo({
   className = "size-8",
   title = "MyRecipes",

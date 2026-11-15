@@ -1,3 +1,5 @@
+import { recipeField } from "./recipeUi";
+
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -8,10 +10,11 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
     <div className="relative">
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg
-          className="h-5 w-5 text-muted-foreground"
+          className="size-4 text-muted-foreground"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden
         >
           <path
             strokeLinecap="round"
@@ -22,22 +25,26 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
         </svg>
       </div>
       <input
-        type="text"
+        type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="block w-full pl-10 pr-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
+        className={`${recipeField} pl-9 pr-9`}
         placeholder="Search recipes..."
+        aria-label="Search recipes"
       />
       {value && (
         <button
+          type="button"
           onClick={() => onChange("")}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
+          className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Clear search"
         >
           <svg
-            className="h-5 w-5"
+            className="size-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden
           >
             <path
               strokeLinecap="round"

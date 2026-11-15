@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const apps = [
   {
     name: "Project Vivia",
-    backgroundColor: "from-sky-500 to-teal-600",
+    backgroundColor: "from-[#F47F6B] to-[#F47F6B]",
     favorite: true,
     comingSoon: true,
     description:
@@ -39,11 +39,9 @@ const apps = [
         className="size-24 rounded-2xl"
       />
     ),
-    backgroundColor: "from-orange-500 to-red-500",
+    backgroundColor: "from-[#EA580C] to-[#D14A08]",
     description:
       "Full-stack recipe hub with Convex auth, community recipes, personal collections, tagging and search.",
-    image:
-      "https://insightful-eel-570.convex.cloud/api/storage/f31f8980-925b-4dcc-863a-276039c83ed5",
   },
 ];
 

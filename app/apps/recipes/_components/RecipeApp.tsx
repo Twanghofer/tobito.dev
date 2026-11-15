@@ -5,9 +5,11 @@ import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useEffect, useState } from "react";
+import { RecipeContainer } from "./RecipeContainer";
 import { RecipeForm } from "./RecipeForm";
 import { RecipeList } from "./RecipeList";
 import { RecipeView } from "./RecipeView";
+import { recipeBtnPrimary } from "./recipeUi";
 import { SearchBar } from "./SearchBar";
 import { TagFilter } from "./TagFilter";
 import { ViewToggle } from "./ViewToggle";
@@ -51,7 +53,6 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
   const effectiveView =
     loggedInUser && recipeView === "my" ? "my" : "public";
 
-  // Get recipes based on current view
   const publicRecipes = useQuery(api.recipes.getPublicRecipes, {
     tagFilter: tagFilter || undefined,
     searchQuery: debouncedSearchQuery || undefined,
@@ -67,7 +68,6 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
       : "skip"
   );
 
-  // Get tags based on current view
   const publicTags = useQuery(api.recipes.getPublicTags);
   const userTags = useQuery(
     api.recipes.getUserTags,
@@ -155,25 +155,48 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      {/* Header with search, filters, and view toggle */}
-      <div className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-4 mb-4">
-          <div className="flex-1">
+    <RecipeContainer className="py-6 sm:py-8 pb-16">
+      <div className="mb-8 space-y-5">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground text-balance">
+              {effectiveView === "my" ? "My recipes" : "Browse recipes"}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {effectiveView === "my"
+                ? "Your personal collection, ready when you cook."
+                : "Discover dishes from the community."}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex-1 min-w-0">
             <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {loggedInUser && (
               <ViewToggle
                 currentView={effectiveView}
                 onViewChange={handleViewChange}
               />
             )}
-            <button
-              onClick={handleAddRecipe}
-              className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium whitespace-nowrap"
-            >
-              + Add Recipe
+            <button onClick={handleAddRecipe} className={recipeBtnPrimary}>
+              <svg
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add recipe
             </button>
           </div>
         </div>
@@ -183,10 +206,10 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
           selectedTag={tagFilter}
           onTagSelect={setTagFilter}
           onClearFilters={clearFilters}
+          isLoading={tags === undefined}
         />
       </div>
 
-      {/* Recipe List */}
       <RecipeList
         recipes={displayRecipes}
         isLoading={isLoadingRecipes}
@@ -198,23 +221,24 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
         currentView={effectiveView}
       />
 
-      {/* Call-to-action for unauthenticated users (wait until auth resolves) */}
       {loggedInUser === null && (
-        <div className="mt-12 text-center py-12 bg-card rounded-lg border border-border">
-          <h3 className="text-xl font-semibold text-foreground mb-2">
-            Ready to create your own recipes?
+        <div className="recipes-card mt-12 rounded-xl px-6 py-10 text-center sm:px-10">
+          <h3 className="text-xl font-semibold tracking-tight text-foreground text-balance">
+            Ready to save your own recipes?
           </h3>
-          <p className="text-muted-foreground mb-6">
-            Create an account to start building your personal recipe collection
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground text-pretty">
+            Create an account to build a personal collection you can cook from
+            anytime.
           </p>
           <button
+            type="button"
             onClick={onShowAuth}
-            className="bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+            className={`${recipeBtnPrimary} mt-6 px-6`}
           >
-            Create Account
+            Create account
           </button>
         </div>
       )}
-    </div>
+    </RecipeContainer>
   );
 }

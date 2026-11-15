@@ -1,7 +1,9 @@
 "use client";
+
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { recipeBtnPrimary, recipeField, recipeLabel } from "./recipeUi";
 
 export function NewSignInForm() {
   const { signIn } = useAuthActions();
@@ -17,7 +19,7 @@ export function NewSignInForm() {
     void signIn("password", formData)
       .then(() => {
         toast.success(
-          flow === "signIn" ? "Welcome back!" : "Account created successfully!"
+          flow === "signIn" ? "Welcome back" : "Account created"
         );
       })
       .catch((error) => {
@@ -43,40 +45,41 @@ export function NewSignInForm() {
 
   return (
     <div className="w-full">
-      {/* Tab Navigation */}
-      <div className="flex mb-6 bg-muted rounded-lg p-1">
-        <button
-          type="button"
-          onClick={() => setActiveTab("signIn")}
-          className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${
-            activeTab === "signIn"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Existing Users – Sign In
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab("signUp")}
-          className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all ${
-            activeTab === "signUp"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          New Users – Create Account
-        </button>
+      <div
+        className="mb-6 flex rounded-lg bg-muted p-1"
+        role="tablist"
+        aria-label="Account"
+      >
+        {(
+          [
+            { id: "signIn", label: "Sign in" },
+            { id: "signUp", label: "Create account" },
+          ] as const
+        ).map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all ${
+              activeTab === tab.id
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* Sign In Form */}
       {activeTab === "signIn" && (
         <div>
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              Welcome Back
+            <h3 className="text-lg font-semibold tracking-tight text-foreground">
+              Welcome back
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="mt-0.5 text-sm text-muted-foreground">
               Sign in to access your recipe collection
             </p>
           </div>
@@ -85,57 +88,50 @@ export function NewSignInForm() {
             onSubmit={(e) => handleSubmit(e, "signIn")}
           >
             <div>
-              <label
-                htmlFor="signin-email"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                Email Address
+              <label htmlFor="signin-email" className={recipeLabel}>
+                Email
               </label>
               <input
                 id="signin-email"
-                className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
+                className={recipeField}
                 type="email"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="you@example.com"
                 required
               />
             </div>
             <div>
-              <label
-                htmlFor="signin-password"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
+              <label htmlFor="signin-password" className={recipeLabel}>
                 Password
               </label>
               <input
                 id="signin-password"
-                className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
+                className={recipeField}
                 type="password"
                 name="password"
-                placeholder="Enter your password"
+                placeholder="Your password"
                 required
               />
             </div>
             <button
-              className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`w-full ${recipeBtnPrimary}`}
               type="submit"
               disabled={submitting}
             >
-              {submitting ? "Signing In..." : "Sign In"}
+              {submitting ? "Signing in..." : "Sign in"}
             </button>
           </form>
         </div>
       )}
 
-      {/* Sign Up Form */}
       {activeTab === "signUp" && (
         <div>
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              Create Your Account
+            <h3 className="text-lg font-semibold tracking-tight text-foreground">
+              Create your account
             </h3>
-            <p className="text-sm text-muted-foreground">
-              Join to start building your personal recipe collection
+            <p className="mt-0.5 text-sm text-muted-foreground">
+              Start building your personal recipe collection
             </p>
           </div>
           <form
@@ -143,48 +139,38 @@ export function NewSignInForm() {
             onSubmit={(e) => handleSubmit(e, "signUp")}
           >
             <div>
-              <label
-                htmlFor="signup-email"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                Email Address
+              <label htmlFor="signup-email" className={recipeLabel}>
+                Email
               </label>
               <input
                 id="signup-email"
-                className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
+                className={recipeField}
                 type="email"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="you@example.com"
                 required
               />
             </div>
             <div>
-              <label
-                htmlFor="signup-password"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
+              <label htmlFor="signup-password" className={recipeLabel}>
                 Password
               </label>
               <input
                 id="signup-password"
-                className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
+                className={recipeField}
                 type="password"
                 name="password"
-                placeholder="Create a password (min. 6 characters)"
+                placeholder="At least 6 characters"
                 minLength={6}
                 required
               />
             </div>
-            <div className="text-xs text-muted-foreground">
-              By creating an account, you agree to store and manage your recipes
-              securely.
-            </div>
             <button
-              className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`w-full ${recipeBtnPrimary}`}
               type="submit"
               disabled={submitting}
             >
-              {submitting ? "Creating Account..." : "Create Account"}
+              {submitting ? "Creating account..." : "Create account"}
             </button>
           </form>
         </div>

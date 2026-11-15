@@ -1,6 +1,8 @@
 "use client";
+
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
+import { recipeBtnSecondary } from "./recipeUi";
 
 export function SignOutButton() {
   const { isAuthenticated } = useConvexAuth();
@@ -12,7 +14,8 @@ export function SignOutButton() {
 
   return (
     <button
-      className="px-4 py-2 rounded bg-secondary text-secondary-foreground border border-border font-semibold hover:bg-secondary/80 transition-colors shadow-sm hover:shadow"
+      type="button"
+      className={`${recipeBtnSecondary} h-9 px-3.5`}
       onClick={() => void signOut()}
     >
       Sign out

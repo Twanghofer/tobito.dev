@@ -5,27 +5,32 @@ interface ViewToggleProps {
 
 export function ViewToggle({ currentView, onViewChange }: ViewToggleProps) {
   return (
-    <div className="flex bg-muted rounded-lg p-1">
-      <button
-        onClick={() => onViewChange("public")}
-        className={`px-4 py-1 rounded-md text-sm font-medium transition-colors ${
-          currentView === "public"
-            ? "bg-background text-foreground shadow-sm"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        All Recipes
-      </button>
-      <button
-        onClick={() => onViewChange("my")}
-        className={`px-4 py-1 rounded-md text-sm font-medium transition-colors ${
-          currentView === "my"
-            ? "bg-background text-foreground shadow-sm"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        My Recipes
-      </button>
+    <div
+      className="flex bg-muted rounded-lg p-1"
+      role="tablist"
+      aria-label="Recipe collection"
+    >
+      {(
+        [
+          { id: "public", label: "All" },
+          { id: "my", label: "Mine" },
+        ] as const
+      ).map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          role="tab"
+          aria-selected={currentView === tab.id}
+          onClick={() => onViewChange(tab.id)}
+          className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            currentView === tab.id
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
     </div>
   );
 }

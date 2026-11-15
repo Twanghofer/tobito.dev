@@ -1,0 +1,78 @@
+/* MyRecipes — cool dark neutrals + orange accents */
+.recipes-app {
+  --radius: 0.75rem;
+  --background: oklch(0.145 0.005 260);
+  --foreground: oklch(0.965 0.004 260);
+  --card: oklch(0.185 0.006 260);
+  --card-foreground: oklch(0.965 0.004 260);
+  --popover: oklch(0.185 0.006 260);
+  --popover-foreground: oklch(0.965 0.004 260);
+  --primary: oklch(0.7 0.165 48);
+  --primary-foreground: oklch(0.99 0.01 75);
+  --secondary: oklch(0.24 0.006 260);
+  --secondary-foreground: oklch(0.94 0.004 260);
+  --muted: oklch(0.23 0.006 260);
+  --muted-foreground: oklch(0.68 0.015 260);
+  --accent: oklch(0.24 0.006 260);
+  --accent-foreground: oklch(0.965 0.004 260);
+  --destructive: oklch(0.62 0.16 25);
+  --border: oklch(0.3 0.008 260);
+  --input: oklch(0.28 0.008 260);
+  --ring: oklch(0.7 0.165 48);
+  font-family: var(--font-recipes-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--foreground);
+  background-color: var(--background);
+}
+
+.recipes-app .recipes-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  background: var(--background);
+}
+
+.recipes-app .recipes-header {
+  backdrop-filter: blur(10px);
+  background: oklch(0.145 0.005 260 / 0.84);
+  border-bottom: 1px solid oklch(1 0 0 / 0.06);
+}
+
+@keyframes recipes-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.recipes-app .recipes-skeleton {
+  background: linear-gradient(
+    110deg,
+    oklch(0.23 0.006 260) 25%,
+    oklch(0.28 0.008 260) 45%,
+    oklch(0.23 0.006 260) 65%
+  );
+  background-size: 200% 100%;
+  animation: recipes-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recipes-app .recipes-skeleton {
+    animation: none;
+  }
+}
+
+.recipes-app .recipes-card {
+  background: var(--card);
+  border: 1px solid oklch(1 0 0 / 0.07);
+  transition: border-color 180ms ease;
+}
+
+.recipes-app .recipes-card-interactive:hover {
+  border-color: oklch(0.7 0.165 48 / 0.35);
+}
+
+.recipes-app .recipes-card-interactive:active {
+  border-color: oklch(1 0 0 / 0.12);
+}

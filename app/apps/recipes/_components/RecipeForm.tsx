@@ -3,9 +3,20 @@
 import { api } from "@packages/recipes-backend/convex/_generated/api";
 import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { formatTag } from "./formatTag";
+import { RecipeContainer } from "./RecipeContainer";
+import { RecipeFormSkeleton } from "./RecipeSkeletons";
+import {
+  recipeBtnGhost,
+  recipeBtnPrimary,
+  recipeBtnSecondary,
+  recipeChip,
+  recipeField,
+  recipeLabel,
+  recipeTextarea,
+} from "./recipeUi";
 
 interface RecipeFormProps {
   recipeId?: Id<"recipes">;
@@ -30,6 +41,7 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [initialized, setInitialized] = useState(!isEditing);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -37,9 +49,8 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
   const updateRecipe = useMutation(api.recipes.updateRecipe);
   const generateUploadUrl = useMutation(api.recipes.generateUploadUrl);
 
-  // Initialize form with existing recipe data
-  useState(() => {
-    if (isEditing && existingRecipe) {
+  useEffect(() => {
+    if (isEditing && existingRecipe && !initialized) {
       setTitle(existingRecipe.title);
       setContent(existingRecipe.content);
       setIngredients(existingRecipe.ingredients || "");
@@ -47,16 +58,17 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
       setExternalUrl(existingRecipe.externalUrl || "");
       setImagePreview(existingRecipe.imageUrl);
       setIsPublic(existingRecipe.isPublic);
+      setInitialized(true);
     }
-  });
+  }, [isEditing, existingRecipe, initialized]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
+      reader.onload = (ev) => {
+        setImagePreview(ev.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -74,7 +86,7 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleAddTag();
@@ -122,11 +134,9 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
     try {
       let imageId: Id<"_storage"> | undefined;
 
-      // Upload new image if selected
       if (selectedImage) {
         imageId = await uploadImage();
       } else if (isEditing && existingRecipe?.imageId) {
-        // Keep existing image if editing and no new image selected
         imageId = existingRecipe.imageId;
       }
 
@@ -142,14 +152,14 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
 
       if (isEditing && recipeId) {
         await updateRecipe({ recipeId, ...recipeData });
-        toast.success("Recipe updated!");
+        toast.success("Recipe updated");
       } else {
         await createRecipe(recipeData);
-        toast.success("Recipe created!");
+        toast.success("Recipe created");
       }
 
       onSuccess();
-    } catch (error) {
+    } catch {
       toast.error(
         isEditing ? "Failed to update recipe" : "Failed to create recipe"
       );
@@ -158,30 +168,29 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
     }
   };
 
-  if (isEditing && existingRecipe === undefined) {
-    return (
-      <div className="flex justify-center items-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+  if (isEditing && (existingRecipe === undefined || !initialized)) {
+    return <RecipeFormSkeleton />;
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">
-            {isEditing ? "Edit Recipe" : "Add New Recipe"}
+    <RecipeContainer size="reading" className="py-6 sm:py-8 pb-16">
+      <div className="recipes-card rounded-xl p-5 sm:p-7">
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+            {isEditing ? "Edit recipe" : "Add recipe"}
           </h2>
           <button
+            type="button"
             onClick={onCancel}
-            className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted transition-colors"
+            className={`${recipeBtnGhost} size-9 p-0`}
+            aria-label="Close"
           >
             <svg
-              className="w-6 h-6"
+              className="size-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden
             >
               <path
                 strokeLinecap="round"
@@ -193,38 +202,31 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-foreground mb-2"
-            >
-              Recipe Title *
+            <label htmlFor="title" className={recipeLabel}>
+              Title
             </label>
             <input
               type="text"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
-              placeholder="e.g., Avocado toast with egg"
+              className={recipeField}
+              placeholder="e.g. Avocado toast with egg"
               required
             />
           </div>
 
-          {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Recipe Image
-            </label>
+            <span className={recipeLabel}>Image</span>
             <div className="space-y-3">
               {imagePreview && (
                 <div className="relative inline-block">
                   <img
                     src={imagePreview}
                     alt="Recipe preview"
-                    className="w-32 h-32 object-cover rounded-lg border border-border"
+                    className="size-28 rounded-lg border border-border object-cover"
                   />
                   <button
                     type="button"
@@ -235,7 +237,8 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
                         fileInputRef.current.value = "";
                       }
                     }}
-                    className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center hover:bg-destructive/90 transition-colors"
+                    className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-sm hover:bg-destructive/90 transition-colors"
+                    aria-label="Remove image"
                   >
                     ×
                   </button>
@@ -246,83 +249,73 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
                 type="file"
                 accept="image/*"
                 onChange={handleImageSelect}
-                className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors"
+                className="block w-full text-sm text-muted-foreground file:mr-4 file:rounded-lg file:border-0 file:bg-primary/12 file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary hover:file:bg-primary/20 transition-colors"
               />
             </div>
           </div>
 
-          {/* Content */}
           <div>
-            <label
-              htmlFor="content"
-              className="block text-sm font-medium text-foreground mb-2"
-            >
-              Recipe Content *
+            <label htmlFor="content" className={recipeLabel}>
+              Content
             </label>
             <textarea
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors resize-vertical bg-background text-foreground placeholder:text-muted-foreground"
-              placeholder="Simple notes or detailed instructions..."
+              className={recipeTextarea}
+              placeholder="Notes or instructions..."
               required
             />
           </div>
 
-          {/* Ingredients (Optional) */}
           <div>
-            <label
-              htmlFor="ingredients"
-              className="block text-sm font-medium text-foreground mb-2"
-            >
-              Ingredients (Optional)
+            <label htmlFor="ingredients" className={recipeLabel}>
+              Ingredients
+              <span className="ml-1 font-normal text-muted-foreground">
+                (optional)
+              </span>
             </label>
             <textarea
               id="ingredients"
               value={ingredients}
               onChange={(e) => setIngredients(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors resize-vertical bg-background text-foreground placeholder:text-muted-foreground"
-              placeholder="List ingredients here..."
+              className={recipeTextarea}
+              placeholder="List ingredients..."
             />
           </div>
 
-          {/* Tags */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Tags
-            </label>
+            <span className={recipeLabel}>Tags</span>
             <div className="space-y-3">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="flex-1 px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
-                  placeholder="e.g., breakfast, quick, healthy"
+                  onKeyDown={handleKeyDown}
+                  className={`flex-1 ${recipeField}`}
+                  placeholder="e.g. breakfast, quick"
                 />
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                  className={recipeBtnSecondary}
                 >
                   Add
                 </button>
               </div>
               {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
-                    >
+                    <span key={tag} className={recipeChip}>
                       {formatTag(tag)}
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}
-                        className="hover:text-primary/80 transition-colors"
+                        className="hover:text-primary/70 transition-colors"
+                        aria-label={`Remove ${formatTag(tag)}`}
                       >
                         ×
                       </button>
@@ -333,76 +326,70 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
             </div>
           </div>
 
-          {/* External URL */}
           <div>
-            <label
-              htmlFor="externalUrl"
-              className="block text-sm font-medium text-foreground mb-2"
-            >
-              External Recipe Link (Optional)
+            <label htmlFor="externalUrl" className={recipeLabel}>
+              External link
+              <span className="ml-1 font-normal text-muted-foreground">
+                (optional)
+              </span>
             </label>
             <input
               type="url"
               id="externalUrl"
               value={externalUrl}
               onChange={(e) => setExternalUrl(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors bg-background text-foreground placeholder:text-muted-foreground"
-              placeholder="https://example.com/recipe"
+              className={recipeField}
+              placeholder="https://..."
             />
           </div>
 
-          {/* Visibility */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Visibility
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center text-foreground">
-                <input
-                  type="radio"
-                  name="visibility"
-                  checked={isPublic}
-                  onChange={() => setIsPublic(true)}
-                  className="mr-2"
-                />
-                Public
-              </label>
-              <label className="flex items-center text-foreground">
-                <input
-                  type="radio"
-                  name="visibility"
-                  checked={!isPublic}
-                  onChange={() => setIsPublic(false)}
-                  className="mr-2"
-                />
-                Private
-              </label>
+            <span className={recipeLabel}>Visibility</span>
+            <div className="flex gap-2">
+              {(
+                [
+                  { value: true, label: "Public" },
+                  { value: false, label: "Private" },
+                ] as const
+              ).map((option) => (
+                <button
+                  key={String(option.value)}
+                  type="button"
+                  onClick={() => setIsPublic(option.value)}
+                  className={`rounded-lg px-3.5 py-2 text-sm font-medium transition-colors ${
+                    isPublic === option.value
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Submit Buttons */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-2 pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-primary text-primary-foreground py-3 px-4 rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className={`flex-1 ${recipeBtnPrimary}`}
             >
               {isSubmitting
                 ? "Saving..."
                 : isEditing
-                  ? "Update Recipe"
-                  : "Create Recipe"}
+                  ? "Update recipe"
+                  : "Create recipe"}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-3 border border-border text-foreground rounded-lg hover:bg-muted transition-colors font-medium"
+              className={recipeBtnSecondary}
             >
               Cancel
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </RecipeContainer>
   );
 }

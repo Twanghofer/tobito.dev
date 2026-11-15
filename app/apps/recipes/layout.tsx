@@ -1,4 +1,12 @@
 import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
+import "./recipes.css";
+
+const recipesSans = Outfit({
+  subsets: ["latin"],
+  variable: "--font-recipes-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "MyRecipes",
@@ -16,5 +24,7 @@ export default function RecipesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className={`recipes-app ${recipesSans.variable}`}>{children}</div>
+  );
 }

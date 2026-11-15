@@ -1,5 +1,7 @@
 import { NewSignInForm } from "./NewSignInForm";
+import { RecipeContainer } from "./RecipeContainer";
 import { RecipeLogo } from "./RecipeLogo";
+import { recipeBtnGhost } from "./recipeUi";
 
 interface AuthPageProps {
   onBack?: () => void;
@@ -7,47 +9,50 @@ interface AuthPageProps {
 
 export function AuthPage({ onBack }: AuthPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="flex flex-1 items-center justify-center py-12">
+      <RecipeContainer size="narrow" className="space-y-8">
         {onBack && (
-          <div className="text-left">
-            <button
-              onClick={onBack}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          <button
+            type="button"
+            onClick={onBack}
+            className={`${recipeBtnGhost} -ml-2 px-2 py-1.5`}
+          >
+            <svg
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              Back to recipes
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to recipes
+          </button>
         )}
-        <div className="text-center flex flex-col items-center">
-          <RecipeLogo className="size-14 mb-4" />
-          <h2 className="text-3xl font-bold text-foreground mb-2">MyRecipes</h2>
-          <p className="text-muted-foreground mb-8">
+
+        <div className="flex flex-col items-center text-center">
+          <RecipeLogo className="mb-4 size-12" />
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+            MyRecipes
+          </h2>
+          <p className="mt-1.5 text-sm text-muted-foreground">
             Your personal cooking companion
           </p>
         </div>
-        <div className="bg-card rounded-lg shadow-sm border border-border p-8">
+
+        <div className="recipes-card rounded-xl p-6 sm:p-7">
           <NewSignInForm />
         </div>
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            Securely store and organize all your favorite recipes in one place.
-          </p>
-        </div>
-      </div>
+
+        <p className="text-center text-sm text-muted-foreground text-pretty">
+          Store and organize your favorite recipes in one place.
+        </p>
+      </RecipeContainer>
     </div>
   );
 }

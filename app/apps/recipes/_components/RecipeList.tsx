@@ -6,6 +6,8 @@ import { useMutation, useQuery } from "convex/react";
 import { FunctionReturnType } from "convex/server";
 import { toast } from "sonner";
 import { formatTag } from "./formatTag";
+import { RecipeListSkeleton } from "./RecipeSkeletons";
+import { recipeBtnGhost, recipeChip } from "./recipeUi";
 
 interface RecipeListProps {
   recipes: FunctionReturnType<typeof api.recipes.getPublicRecipes> | undefined;
@@ -18,37 +20,6 @@ interface RecipeListProps {
   currentView: "public" | "my";
 }
 
-function RecipeListSkeleton() {
-  return (
-    <div
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      aria-busy="true"
-      aria-label="Loading recipes"
-    >
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="bg-card rounded-lg border border-border overflow-hidden"
-        >
-          <div className="aspect-video bg-muted animate-pulse" />
-          <div className="p-4 space-y-3">
-            <div className="h-5 bg-muted rounded animate-pulse w-3/4" />
-            <div className="h-4 bg-muted rounded animate-pulse w-full" />
-            <div className="h-4 bg-muted rounded animate-pulse w-2/3" />
-            <div className="flex gap-2 pt-1">
-              <div className="h-6 w-14 bg-muted rounded-full animate-pulse" />
-              <div className="h-6 w-16 bg-muted rounded-full animate-pulse" />
-            </div>
-            <div className="pt-2 border-t border-border">
-              <div className="h-3 bg-muted rounded animate-pulse w-20" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export function RecipeList({
   recipes,
   isLoading,
@@ -57,7 +28,6 @@ export function RecipeList({
   hasFilters,
   onClearFilters,
   isLoggedIn,
-  currentView,
 }: RecipeListProps) {
   const loggedInUser = useQuery(api.auth.loggedInUser);
   const toggleFavorite = useMutation(api.recipes.toggleFavorite);
@@ -66,7 +36,7 @@ export function RecipeList({
   const handleToggleFavorite = async (recipeId: Id<"recipes">) => {
     try {
       await toggleFavorite({ recipeId });
-    } catch (error) {
+    } catch {
       toast.error("Failed to update favorite status");
     }
   };
@@ -76,7 +46,7 @@ export function RecipeList({
       try {
         await deleteRecipe({ recipeId });
         toast.success("Recipe deleted");
-      } catch (error) {
+      } catch {
         toast.error("Failed to delete recipe");
       }
     }
@@ -88,13 +58,14 @@ export function RecipeList({
 
   if (recipes.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-muted-foreground mb-4">
+      <div className="recipes-card rounded-xl px-6 py-14 text-center">
+        <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground">
           <svg
-            className="w-16 h-16 mx-auto"
+            className="size-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden
           >
             <path
               strokeLinecap="round"
@@ -104,18 +75,19 @@ export function RecipeList({
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-2">
+        <h3 className="text-lg font-semibold tracking-tight text-foreground">
           {hasFilters ? "No recipes found" : "No recipes yet"}
         </h3>
-        <p className="text-muted-foreground mb-4">
+        <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground text-pretty">
           {hasFilters
-            ? "Try adjusting your search or filters"
-            : "Start building your recipe collection by adding your first recipe"}
+            ? "Try a different search or clear your filters."
+            : "Add your first recipe to start building your collection."}
         </p>
         {hasFilters && (
           <button
+            type="button"
             onClick={onClearFilters}
-            className="text-primary hover:text-primary/80 font-medium"
+            className={`${recipeBtnGhost} mt-4 px-3 py-2`}
           >
             Clear filters
           </button>
@@ -125,27 +97,42 @@ export function RecipeList({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {recipes.map((recipe) => (
-        <div
+        <article
           key={recipe._id}
-          className="relative bg-card flex flex-col rounded-lg shadow-sm border border-border overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300"
+          className="recipes-card recipes-card-interactive relative flex flex-col overflow-hidden rounded-xl"
         >
-          {/* Recipe Image */}
-          <div className="aspect-video bg-muted overflow-hidden">
-            {recipe.imageUrl && (
+          <div className="aspect-[16/10] bg-muted overflow-hidden">
+            {recipe.imageUrl ? (
               <img
                 src={recipe.imageUrl}
                 alt=""
-                className="w-full h-full object-cover hover:scale-105 transition-transform"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-muted-foreground/40">
+                <svg
+                  className="size-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.25}
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
             )}
           </div>
 
-          <div className="p-4 flex-1 flex flex-col">
-            {/* Title and Favorite */}
-            <div className="flex items-start justify-between mb-2">
-              <h3 className="font-semibold text-foreground line-clamp-2 flex-1">
+          <div className="flex flex-1 flex-col p-4">
+            <div className="mb-2 flex items-start justify-between gap-2">
+              <h3 className="flex-1 text-base font-semibold tracking-tight text-foreground line-clamp-2">
                 <a
                   href={`#recipe-${recipe._id}`}
                   onClick={(e) => {
@@ -159,18 +146,25 @@ export function RecipeList({
               </h3>
               {isLoggedIn && loggedInUser?._id === recipe.authorId && (
                 <button
+                  type="button"
                   onClick={() => handleToggleFavorite(recipe._id)}
-                  className={`relative z-10 ml-2 p-1 rounded ${
+                  className={`relative z-10 -mr-1 -mt-1 rounded-lg p-1.5 transition-colors ${
                     recipe.isFavorite
-                      ? "text-destructive hover:text-destructive/80"
-                      : "text-muted-foreground hover:text-destructive"
-                  } transition-colors`}
+                      ? "text-primary hover:text-primary/80"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                  aria-label={
+                    recipe.isFavorite
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="size-4"
                     fill={recipe.isFavorite ? "currentColor" : "none"}
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"
@@ -183,44 +177,39 @@ export function RecipeList({
               )}
             </div>
 
-            {/* Content Preview */}
-            <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+            <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">
               {recipe.content}
             </p>
 
-            {/* Tags */}
             {recipe.tags.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1 mb-3 mt-auto">
+              <div className="mt-auto mb-3 flex flex-wrap items-center gap-1.5">
                 {recipe.tags.slice(0, 3).map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-block bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
-                  >
+                  <span key={tag} className={recipeChip}>
                     {formatTag(tag)}
                   </span>
                 ))}
                 {recipe.tags.length > 3 && (
-                  <span className="text-xs text-muted-foreground leading-none">
-                    +{recipe.tags.length - 3} more
+                  <span className="text-xs text-muted-foreground">
+                    +{recipe.tags.length - 3}
                   </span>
                 )}
               </div>
             )}
 
-            {/* External Link */}
             {recipe.externalUrl && (
               <div className="relative z-10 mb-3">
                 <a
                   href={recipe.externalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:text-primary/80 text-sm flex items-center gap-1"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
                 >
                   <svg
-                    className="w-4 h-4"
+                    className="size-3.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"
@@ -229,28 +218,30 @@ export function RecipeList({
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
-                  View original
+                  Original
                 </a>
               </div>
             )}
 
-            {/* Actions */}
-            <div className="flex justify-between items-center pt-2 border-t border-border">
-              <span className="text-xs text-muted-foreground">
+            <div className="flex items-center justify-between border-t border-border/50 pt-3">
+              <time className="text-xs text-muted-foreground tabular-nums">
                 {new Date(recipe._creationTime).toLocaleDateString()}
-              </span>
+              </time>
               {isLoggedIn && loggedInUser?._id === recipe.authorId && (
-                <div className="relative z-10 flex gap-2">
+                <div className="relative z-10 flex gap-0.5">
                   <button
+                    type="button"
                     onClick={() => onEditRecipe(recipe._id)}
-                    className="text-muted-foreground hover:text-primary p-1 rounded transition-colors"
+                    className="rounded-lg p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                     title="Edit recipe"
+                    aria-label="Edit recipe"
                   >
                     <svg
-                      className="w-4 h-4"
+                      className="size-4"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      aria-hidden
                     >
                       <path
                         strokeLinecap="round"
@@ -261,15 +252,18 @@ export function RecipeList({
                     </svg>
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleDeleteRecipe(recipe._id)}
-                    className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors"
+                    className="rounded-lg p-1.5 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
                     title="Delete recipe"
+                    aria-label="Delete recipe"
                   >
                     <svg
-                      className="w-4 h-4"
+                      className="size-4"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      aria-hidden
                     >
                       <path
                         strokeLinecap="round"
@@ -283,7 +277,7 @@ export function RecipeList({
               )}
             </div>
           </div>
-        </div>
+        </article>
       ))}
     </div>
   );

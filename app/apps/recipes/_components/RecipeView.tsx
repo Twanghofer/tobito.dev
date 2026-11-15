@@ -5,6 +5,13 @@ import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
 import { formatTag } from "./formatTag";
+import { RecipeContainer } from "./RecipeContainer";
+import { RecipeViewSkeleton } from "./RecipeSkeletons";
+import {
+  recipeBtnGhost,
+  recipeBtnSecondary,
+  recipeChip,
+} from "./recipeUi";
 
 interface RecipeViewProps {
   recipeId: Id<"recipes">;
@@ -21,7 +28,7 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
   const handleToggleFavorite = async () => {
     try {
       await toggleFavorite({ recipeId });
-    } catch (error) {
+    } catch {
       toast.error("Failed to update favorite status");
     }
   };
@@ -32,53 +39,49 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
         await deleteRecipe({ recipeId });
         toast.success("Recipe deleted");
         onBack();
-      } catch (error) {
+      } catch {
         toast.error("Failed to delete recipe");
       }
     }
   };
 
   if (recipe === undefined) {
-    return (
-      <div className="flex justify-center items-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <RecipeViewSkeleton />;
   }
 
   if (recipe === null) {
     return (
-      <div className="max-w-2xl mx-auto p-4">
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold text-foreground mb-2">
-            Recipe not found
-          </h2>
-          <button
-            onClick={onBack}
-            className="text-primary hover:text-primary/80 font-medium"
-          >
-            ← Back to recipes
-          </button>
-        </div>
-      </div>
+      <RecipeContainer size="reading" className="py-16 text-center">
+        <h2 className="text-xl font-semibold tracking-tight text-foreground">
+          Recipe not found
+        </h2>
+        <button
+          type="button"
+          onClick={onBack}
+          className={`${recipeBtnGhost} mt-4 px-3 py-2`}
+        >
+          ← Back to recipes
+        </button>
+      </RecipeContainer>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden">
-        {/* Header */}
-        <div className="p-6 border-b border-border">
-          <div className="flex items-start justify-between mb-4">
+    <RecipeContainer size="reading" className="py-6 sm:py-8 pb-16">
+      <article className="recipes-card overflow-hidden rounded-xl">
+        <div className="border-b border-border/50 p-5 sm:p-6">
+          <div className="mb-5 flex items-start justify-between gap-3">
             <button
+              type="button"
               onClick={onBack}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              className={`${recipeBtnGhost} -ml-2 px-2 py-1.5`}
             >
               <svg
-                className="w-5 h-5"
+                className="size-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden
               >
                 <path
                   strokeLinecap="round"
@@ -87,28 +90,35 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-              Back to recipes
+              Back
             </button>
             {canEdit && (
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <button
+                  type="button"
                   onClick={handleToggleFavorite}
-                  className={`p-2 rounded-lg transition-colors ${
+                  className={`rounded-lg p-2 transition-colors ${
                     recipe.isFavorite
-                      ? "text-destructive hover:text-destructive/80 bg-destructive/10"
-                      : "text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-primary"
                   }`}
                   title={
                     recipe.isFavorite
                       ? "Remove from favorites"
                       : "Add to favorites"
                   }
+                  aria-label={
+                    recipe.isFavorite
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="size-5"
                     fill={recipe.isFavorite ? "currentColor" : "none"}
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"
@@ -119,15 +129,18 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
                   </svg>
                 </button>
                 <button
+                  type="button"
                   onClick={onEdit}
-                  className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                  className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                   title="Edit recipe"
+                  aria-label="Edit recipe"
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="size-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"
@@ -138,15 +151,18 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
                   </svg>
                 </button>
                 <button
+                  type="button"
                   onClick={handleDelete}
-                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                  className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
                   title="Delete recipe"
+                  aria-label="Delete recipe"
                 >
                   <svg
-                    className="w-6 h-6"
+                    className="size-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"
@@ -160,20 +176,21 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
             )}
           </div>
 
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground text-balance">
             {recipe.title}
           </h1>
 
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <time className="tabular-nums">
               Created {new Date(recipe._creationTime).toLocaleDateString()}
-            </span>
+            </time>
             {recipe.isFavorite && (
-              <span className="flex items-center gap-1 text-destructive">
+              <span className="inline-flex items-center gap-1 text-primary">
                 <svg
-                  className="w-4 h-4"
+                  className="size-3.5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden
                 >
                   <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
@@ -183,29 +200,25 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
           </div>
         </div>
 
-        {/* Image */}
         {recipe.imageUrl && (
-          <div className="aspect-video bg-muted">
+          <div className="aspect-[16/9] bg-muted">
             <img
               src={recipe.imageUrl}
               alt={recipe.title}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
           </div>
         )}
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Tags */}
+        <div className="space-y-7 p-5 sm:p-6">
           {recipe.tags.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-foreground mb-2">Tags</h3>
-              <div className="flex flex-wrap gap-2">
+              <h2 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Tags
+              </h2>
+              <div className="flex flex-wrap gap-1.5">
                 {recipe.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-block bg-primary/10 text-primary text-sm px-3 py-1 rounded-full"
-                  >
+                  <span key={tag} className={recipeChip}>
                     {formatTag(tag)}
                   </span>
                 ))}
@@ -213,12 +226,11 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
             </div>
           )}
 
-          {/* External Link */}
           {recipe.externalUrl && (
             <div>
-              <h3 className="text-sm font-medium text-foreground mb-2">
-                Original Recipe
-              </h3>
+              <h2 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Original recipe
+              </h2>
               <a
                 href={recipe.externalUrl}
                 target="_blank"
@@ -226,10 +238,11 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
                 className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="size-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden
                 >
                   <path
                     strokeLinecap="round"
@@ -238,38 +251,42 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                   />
                 </svg>
-                View original recipe
+                View original
               </a>
             </div>
           )}
 
-          {/* Ingredients */}
           {recipe.ingredients && (
             <div>
-              <h3 className="text-lg font-semibold text-foreground mb-3">
+              <h2 className="mb-3 text-lg font-semibold tracking-tight text-foreground">
                 Ingredients
-              </h3>
-              <div className="bg-muted rounded-lg p-4">
-                <pre className="whitespace-pre-wrap text-foreground font-sans">
+              </h2>
+              <div className="rounded-lg bg-muted/60 px-4 py-3.5">
+                <pre className="whitespace-pre-wrap font-sans text-foreground leading-relaxed">
                   {recipe.ingredients}
                 </pre>
               </div>
             </div>
           )}
 
-          {/* Instructions/Content */}
           <div>
-            <h3 className="text-lg font-semibold text-foreground mb-3">
+            <h2 className="mb-3 text-lg font-semibold tracking-tight text-foreground">
               {recipe.ingredients ? "Instructions" : "Recipe"}
-            </h3>
-            <div className="prose max-w-none">
-              <pre className="whitespace-pre-wrap text-foreground font-sans leading-relaxed">
-                {recipe.content}
-              </pre>
-            </div>
+            </h2>
+            <pre className="whitespace-pre-wrap font-sans text-foreground leading-relaxed text-pretty">
+              {recipe.content}
+            </pre>
           </div>
+
+          {canEdit && (
+            <div className="flex gap-2 border-t border-border/50 pt-5">
+              <button type="button" onClick={onEdit} className={recipeBtnSecondary}>
+                Edit recipe
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </article>
+    </RecipeContainer>
   );
 }

@@ -5,64 +5,47 @@ import { useQuery } from "convex/react";
 import { useState } from "react";
 import { AuthPage } from "./_components/AuthPage";
 import { RecipeApp } from "./_components/RecipeApp";
-import { RecipeLogo } from "./_components/RecipeLogo";
+import { RecipeShell } from "./_components/RecipeShell";
+import { AuthHeaderSkeleton } from "./_components/RecipeSkeletons";
+import { recipeBtnPrimary } from "./_components/recipeUi";
 import { SignOutButton } from "./_components/SignOutButton";
 
 export default function App() {
   const loggedInUser = useQuery(api.auth.loggedInUser);
   const [showAuthPage, setShowAuthPage] = useState(false);
 
-  // Show auth page if explicitly requested
   if (showAuthPage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <RecipeShell showHeader={false}>
         <AuthPage onBack={() => setShowAuthPage(false)} />
-      </div>
+      </RecipeShell>
     );
   }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/20">
-      <header className="sticky top-0 z-10 bg-card/80 backdrop-blur-sm h-16 flex justify-between items-center border-b border-border shadow-sm px-4">
-        <div className="flex items-center gap-2.5">
-          <RecipeLogo className="size-8" />
-          <h2 className="text-xl font-semibold text-foreground tracking-tight">
-            MyRecipes
-          </h2>
-        </div>
-        <div className="flex items-center gap-4">
-          {loggedInUser === undefined ? (
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          ) : loggedInUser ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">
-                Welcome, {loggedInUser.name || "User"}
-              </span>
-              <SignOutButton />
-            </div>
-          ) : (
-            <div className="text-sm text-muted-foreground">
-              <button
-                onClick={() => setShowAuthPage(true)}
-                className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium"
-              >
-                Sign In / Create Account
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
-      <main className="flex-1">
-        <Content onShowAuth={() => setShowAuthPage(true)} />
-      </main>
-    </div>
-  );
-}
+  const headerRight =
+    loggedInUser === undefined ? (
+      <AuthHeaderSkeleton />
+    ) : loggedInUser ? (
+      <div className="flex items-center gap-3">
+        <span className="hidden sm:inline text-sm text-muted-foreground truncate max-w-[10rem]">
+          {loggedInUser.name || "Signed in"}
+        </span>
+        <SignOutButton />
+      </div>
+    ) : (
+      <button
+        onClick={() => setShowAuthPage(true)}
+        className={`${recipeBtnPrimary} h-9 px-3.5`}
+      >
+        Sign in
+      </button>
+    );
 
-function Content({ onShowAuth }: { onShowAuth: () => void }) {
   return (
-    <div className="w-full">
-      <RecipeApp onShowAuth={onShowAuth} />
-    </div>
+    <RecipeShell headerRight={headerRight}>
+      <main className="flex-1">
+        <RecipeApp onShowAuth={() => setShowAuthPage(true)} />
+      </main>
+    </RecipeShell>
   );
 }
