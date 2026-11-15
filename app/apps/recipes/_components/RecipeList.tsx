@@ -5,9 +5,11 @@ import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { FunctionReturnType } from "convex/server";
 import { toast } from "sonner";
+import { formatTag } from "./formatTag";
 
 interface RecipeListProps {
-  recipes: FunctionReturnType<typeof api.recipes.getPublicRecipes>;
+  recipes: FunctionReturnType<typeof api.recipes.getPublicRecipes> | undefined;
+  isLoading: boolean;
   onViewRecipe: (recipeId: Id<"recipes">) => void;
   onEditRecipe: (recipeId: Id<"recipes">) => void;
   hasFilters: boolean;
@@ -16,8 +18,40 @@ interface RecipeListProps {
   currentView: "public" | "my";
 }
 
+function RecipeListSkeleton() {
+  return (
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      aria-busy="true"
+      aria-label="Loading recipes"
+    >
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="bg-card rounded-lg border border-border overflow-hidden"
+        >
+          <div className="aspect-video bg-muted animate-pulse" />
+          <div className="p-4 space-y-3">
+            <div className="h-5 bg-muted rounded animate-pulse w-3/4" />
+            <div className="h-4 bg-muted rounded animate-pulse w-full" />
+            <div className="h-4 bg-muted rounded animate-pulse w-2/3" />
+            <div className="flex gap-2 pt-1">
+              <div className="h-6 w-14 bg-muted rounded-full animate-pulse" />
+              <div className="h-6 w-16 bg-muted rounded-full animate-pulse" />
+            </div>
+            <div className="pt-2 border-t border-border">
+              <div className="h-3 bg-muted rounded animate-pulse w-20" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function RecipeList({
   recipes,
+  isLoading,
   onViewRecipe,
   onEditRecipe,
   hasFilters,
@@ -47,6 +81,10 @@ export function RecipeList({
       }
     }
   };
+
+  if (isLoading || recipes === undefined) {
+    return <RecipeListSkeleton />;
+  }
 
   if (recipes.length === 0) {
     return (
@@ -91,33 +129,38 @@ export function RecipeList({
       {recipes.map((recipe) => (
         <div
           key={recipe._id}
-          className="bg-card rounded-lg shadow-sm border border-border overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300"
+          className="relative bg-card flex flex-col rounded-lg shadow-sm border border-border overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-300"
         >
           {/* Recipe Image */}
           <div className="aspect-video bg-muted overflow-hidden">
             {recipe.imageUrl && (
               <img
                 src={recipe.imageUrl}
-                alt={recipe.title}
-                className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => onViewRecipe(recipe._id)}
+                alt=""
+                className="w-full h-full object-cover hover:scale-105 transition-transform"
               />
             )}
           </div>
 
-          <div className="p-4">
+          <div className="p-4 flex-1 flex flex-col">
             {/* Title and Favorite */}
             <div className="flex items-start justify-between mb-2">
-              <h3
-                className="font-semibold text-foreground cursor-pointer hover:text-primary transition-colors line-clamp-2 flex-1"
-                onClick={() => onViewRecipe(recipe._id)}
-              >
-                {recipe.title}
+              <h3 className="font-semibold text-foreground line-clamp-2 flex-1">
+                <a
+                  href={`#recipe-${recipe._id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onViewRecipe(recipe._id);
+                  }}
+                  className="hover:text-primary transition-colors after:absolute after:inset-0"
+                >
+                  {recipe.title}
+                </a>
               </h3>
               {isLoggedIn && loggedInUser?._id === recipe.authorId && (
                 <button
                   onClick={() => handleToggleFavorite(recipe._id)}
-                  className={`ml-2 p-1 rounded ${
+                  className={`relative z-10 ml-2 p-1 rounded ${
                     recipe.isFavorite
                       ? "text-destructive hover:text-destructive/80"
                       : "text-muted-foreground hover:text-destructive"
@@ -147,17 +190,17 @@ export function RecipeList({
 
             {/* Tags */}
             {recipe.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-3">
+              <div className="flex flex-wrap items-center gap-1 mb-3 mt-auto">
                 {recipe.tags.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
                     className="inline-block bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
                   >
-                    {tag}
+                    {formatTag(tag)}
                   </span>
                 ))}
                 {recipe.tags.length > 3 && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-muted-foreground leading-none">
                     +{recipe.tags.length - 3} more
                   </span>
                 )}
@@ -166,7 +209,7 @@ export function RecipeList({
 
             {/* External Link */}
             {recipe.externalUrl && (
-              <div className="mb-3">
+              <div className="relative z-10 mb-3">
                 <a
                   href={recipe.externalUrl}
                   target="_blank"
@@ -197,7 +240,7 @@ export function RecipeList({
                 {new Date(recipe._creationTime).toLocaleDateString()}
               </span>
               {isLoggedIn && loggedInUser?._id === recipe.authorId && (
-                <div className="flex gap-2">
+                <div className="relative z-10 flex gap-2">
                   <button
                     onClick={() => onEditRecipe(recipe._id)}
                     className="text-muted-foreground hover:text-primary p-1 rounded transition-colors"

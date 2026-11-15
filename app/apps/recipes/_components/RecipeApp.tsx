@@ -3,7 +3,8 @@
 import { api } from "@packages/recipes-backend/convex/_generated/api";
 import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import { useState } from "react";
+import type { FunctionReturnType } from "convex/server";
+import { useEffect, useState } from "react";
 import { RecipeForm } from "./RecipeForm";
 import { RecipeList } from "./RecipeList";
 import { RecipeView } from "./RecipeView";
@@ -13,9 +14,21 @@ import { ViewToggle } from "./ViewToggle";
 
 type View = "list" | "add" | "edit" | "view";
 type RecipeView = "public" | "my";
+type RecipeListData = FunctionReturnType<typeof api.recipes.getPublicRecipes>;
 
 interface RecipeAppProps {
   onShowAuth: () => void;
+}
+
+function useDebouncedValue<T>(value: T, delayMs: number): T {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebounced(value), delayMs);
+    return () => window.clearTimeout(timer);
+  }, [value, delayMs]);
+
+  return debounced;
 }
 
 export function RecipeApp({ onShowAuth }: RecipeAppProps) {
@@ -25,13 +38,23 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
     useState<Id<"recipes"> | null>(null);
   const [tagFilter, setTagFilter] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 250);
+  const [cachedRecipes, setCachedRecipes] = useState<{
+    view: RecipeView;
+    recipes: RecipeListData;
+  } | null>(null);
 
   const loggedInUser = useQuery(api.auth.loggedInUser);
+
+  // Fall back to public while auth is unknown or signed out so we never
+  // treat a skipped user query as an empty list.
+  const effectiveView =
+    loggedInUser && recipeView === "my" ? "my" : "public";
 
   // Get recipes based on current view
   const publicRecipes = useQuery(api.recipes.getPublicRecipes, {
     tagFilter: tagFilter || undefined,
-    searchQuery: searchQuery || undefined,
+    searchQuery: debouncedSearchQuery || undefined,
   });
 
   const userRecipes = useQuery(
@@ -39,7 +62,7 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
     loggedInUser
       ? {
           tagFilter: tagFilter || undefined,
-          searchQuery: searchQuery || undefined,
+          searchQuery: debouncedSearchQuery || undefined,
         }
       : "skip"
   );
@@ -51,8 +74,21 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
     loggedInUser ? {} : "skip"
   );
 
-  const recipes = recipeView === "public" ? publicRecipes : userRecipes;
-  const tags = recipeView === "public" ? publicTags : userTags;
+  const recipes = effectiveView === "public" ? publicRecipes : userRecipes;
+  const tags = effectiveView === "public" ? publicTags : userTags;
+
+  useEffect(() => {
+    if (recipes !== undefined) {
+      setCachedRecipes({ view: effectiveView, recipes });
+    }
+  }, [recipes, effectiveView]);
+
+  // Keep prior results while filters refetch; only skeleton on true first load /
+  // view switches with no cache for that view.
+  const displayRecipes =
+    recipes ??
+    (cachedRecipes?.view === effectiveView ? cachedRecipes.recipes : undefined);
+  const isLoadingRecipes = displayRecipes === undefined;
 
   const handleAddRecipe = () => {
     if (!loggedInUser) {
@@ -129,7 +165,7 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
           <div className="flex gap-2">
             {loggedInUser && (
               <ViewToggle
-                currentView={recipeView}
+                currentView={effectiveView}
                 onViewChange={handleViewChange}
               />
             )}
@@ -143,7 +179,7 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
         </div>
 
         <TagFilter
-          tags={tags || []}
+          tags={tags ?? []}
           selectedTag={tagFilter}
           onTagSelect={setTagFilter}
           onClearFilters={clearFilters}
@@ -152,17 +188,18 @@ export function RecipeApp({ onShowAuth }: RecipeAppProps) {
 
       {/* Recipe List */}
       <RecipeList
-        recipes={recipes || []}
+        recipes={displayRecipes}
+        isLoading={isLoadingRecipes}
         onViewRecipe={handleViewRecipe}
         onEditRecipe={handleEditRecipe}
         hasFilters={!!tagFilter || !!searchQuery}
         onClearFilters={clearFilters}
         isLoggedIn={!!loggedInUser}
-        currentView={recipeView}
+        currentView={effectiveView}
       />
 
-      {/* Call-to-action for unauthenticated users */}
-      {!loggedInUser && (
+      {/* Call-to-action for unauthenticated users (wait until auth resolves) */}
+      {loggedInUser === null && (
         <div className="mt-12 text-center py-12 bg-card rounded-lg border border-border">
           <h3 className="text-xl font-semibold text-foreground mb-2">
             Ready to create your own recipes?

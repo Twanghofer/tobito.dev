@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { useState } from "react";
 import { AuthPage } from "./_components/AuthPage";
 import { RecipeApp } from "./_components/RecipeApp";
+import { RecipeLogo } from "./_components/RecipeLogo";
 import { SignOutButton } from "./_components/SignOutButton";
 
 export default function App() {
@@ -23,7 +24,12 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/20">
       <header className="sticky top-0 z-10 bg-card/80 backdrop-blur-sm h-16 flex justify-between items-center border-b border-border shadow-sm px-4">
-        <h2 className="text-xl font-semibold text-primary">MyRecipes</h2>
+        <div className="flex items-center gap-2.5">
+          <RecipeLogo className="size-8" />
+          <h2 className="text-xl font-semibold text-foreground tracking-tight">
+            MyRecipes
+          </h2>
+        </div>
         <div className="flex items-center gap-4">
           {loggedInUser === undefined ? (
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>

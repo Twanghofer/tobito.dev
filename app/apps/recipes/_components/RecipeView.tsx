@@ -4,6 +4,7 @@ import { api } from "@packages/recipes-backend/convex/_generated/api";
 import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
+import { formatTag } from "./formatTag";
 
 interface RecipeViewProps {
   recipeId: Id<"recipes">;
@@ -205,7 +206,7 @@ export function RecipeView({ recipeId, onBack, onEdit }: RecipeViewProps) {
                     key={tag}
                     className="inline-block bg-primary/10 text-primary text-sm px-3 py-1 rounded-full"
                   >
-                    {tag}
+                    {formatTag(tag)}
                   </span>
                 ))}
               </div>

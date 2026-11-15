@@ -1,4 +1,5 @@
 import { NewSignInForm } from "./NewSignInForm";
+import { RecipeLogo } from "./RecipeLogo";
 
 interface AuthPageProps {
   onBack?: () => void;
@@ -31,7 +32,8 @@ export function AuthPage({ onBack }: AuthPageProps) {
             </button>
           </div>
         )}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
+          <RecipeLogo className="size-14 mb-4" />
           <h2 className="text-3xl font-bold text-foreground mb-2">MyRecipes</h2>
           <p className="text-muted-foreground mb-8">
             Your personal cooking companion

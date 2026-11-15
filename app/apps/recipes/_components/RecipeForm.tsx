@@ -5,6 +5,7 @@ import type { Id } from "@packages/recipes-backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { formatTag } from "./formatTag";
 
 interface RecipeFormProps {
   recipeId?: Id<"recipes">;
@@ -317,7 +318,7 @@ export function RecipeForm({ recipeId, onCancel, onSuccess }: RecipeFormProps) {
                       key={tag}
                       className="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
                     >
-                      {tag}
+                      {formatTag(tag)}
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}

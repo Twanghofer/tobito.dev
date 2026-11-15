@@ -8,8 +8,8 @@ export default function Home() {
       href: "/projects",
     },
     {
-      name: "About Me",
-      href: "/about",
+      name: "Tools",
+      href: "/tools",
     },
     {
       name: "Contact",

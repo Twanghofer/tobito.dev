@@ -1,3 +1,5 @@
+import { formatTag } from "./formatTag";
+
 interface TagFilterProps {
   tags: string[];
   selectedTag: string;
@@ -40,7 +42,7 @@ export function TagFilter({
               : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
-          {tag}
+          {formatTag(tag)}
         </button>
       ))}
       {selectedTag && (
