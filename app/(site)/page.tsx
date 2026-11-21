@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/site/Reveal";
+import { SiteShell } from "@/components/site/SiteShell";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -18,48 +20,54 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <div className="text-center mb-32">
-          <h1 className="text-5xl leading-tight md:text-7xl lg:text-8xl font-bold mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-            Hey, I'm Tobi
+    <SiteShell centered>
+      <div className="container mx-auto max-w-4xl px-4 py-16">
+        <Reveal className="mb-28 text-center md:mb-32" delayMs={40}>
+          <p className="mb-5 text-sm tracking-[0.22em] text-muted-foreground uppercase">
+            tobito.dev
+          </p>
+          <h1 className="bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-5xl leading-tight font-bold text-transparent md:text-7xl lg:text-8xl">
+            Hey, I&apos;m Tobi
           </h1>
-        </div>
+        </Reveal>
 
         <nav>
           <ul className="space-y-8">
-            {links.map((link) => (
-              <li key={link.href}>
+            {links.map((link, index) => (
+              <Reveal as="li" key={link.href} delayMs={220 + index * 90}>
                 <Link href={link.href} className="group block">
-                  <div className="relative flex items-center justify-between py-4 border-b border-border after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary/80 after:origin-left after:scale-x-0 after:transition-transform after:duration-400 after:ease-in-out group-hover:after:scale-x-100">
-                    <h2 className="text-3xl leading-tight md:text-5xl font-bold relative transition-transform duration-300 ease-out group-hover:translate-x-2">
+                  <div className="relative flex items-center justify-between border-b border-border py-4 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-primary/80 after:transition-transform after:duration-400 after:ease-in-out after:content-[''] group-hover:after:scale-x-100 group-active:translate-x-0.5">
+                    <h2 className="relative text-3xl leading-tight font-bold transition-transform duration-300 ease-out group-hover:translate-x-2 md:text-5xl">
                       <span className="bg-gradient-to-r from-muted-foreground via-foreground/80 to-muted-foreground bg-clip-text text-transparent">
                         {link.name}
                       </span>
                       <span
                         aria-hidden="true"
-                        className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-primary bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-primary bg-clip-text text-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                       >
                         {link.name}
                       </span>
                     </h2>
-                    <ArrowRight className="w-6 h-6 md:w-8 md:h-8 text-muted-foreground group-hover:text-primary group-hover:translate-x-2 transition-all duration-300" />
+                    <ArrowRight className="h-6 w-6 text-muted-foreground transition-all duration-300 group-hover:translate-x-2 group-hover:text-primary md:h-8 md:w-8" />
                   </div>
                 </Link>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </nav>
 
-        <div className="mt-20 pt-8 border-t border-border text-center">
+        <Reveal
+          className="mt-20 border-t border-border pt-8 text-center"
+          delayMs={520}
+        >
           <a
             href="https://github.com/tobitodotdev"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
           >
             <svg
-              className="w-4 h-4"
+              className="h-4 w-4"
               fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -72,8 +80,8 @@ export default function Home() {
             </svg>
             GitHub
           </a>
-        </div>
+        </Reveal>
       </div>
-    </div>
+    </SiteShell>
   );
 }
