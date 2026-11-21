@@ -1,7 +1,6 @@
 ## Projects
 
-- Add FJ configurator when public
-- Clean up MyRecipes
+- Clean up secret santa and add
 
 ## Prorotype Ideas
 

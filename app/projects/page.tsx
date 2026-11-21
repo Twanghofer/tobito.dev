@@ -73,7 +73,7 @@ const apps: App[] = [
   {
     name: "Product Configurator",
     href: "https://selector.fritsjurgens.com/",
-    backgroundColor: "from-[#F7F7F7] to-[#EBEBEB]",
+    backgroundColor: "from-[#252525] to-[#171714]",
     favorite: true,
     description:
       "Interactive product configurator for pivot door systems — configure hinges, dimensions, and finishes with live visualization.",
