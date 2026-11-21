@@ -49,7 +49,7 @@ const apps: App[] = [
     href: "https://lol-draftlane.tobito.dev",
     backgroundColor: "from-[#1a1f1e] to-[#2f6f6b]",
     description:
-      "Personalized champ-select recommendations for ranked — your pool, your stats, this board, with explainable reasons.",
+      "Champ-select assistant that ranks your personal pool into a top 3 by comfort, ranked form, matchup, and team fit.",
     icon: () => (
       <img
         src="https://lol-draftlane.tobito.dev/favicon.svg"
@@ -58,7 +58,20 @@ const apps: App[] = [
       />
     ),
   },
-
+  {
+    name: "Spritbilanz",
+    href: "https://spritbilanz.tobito.dev",
+    backgroundColor: "from-[#2F7A86] to-[#1A4A52]",
+    description:
+      "Fuel-stop decision tool for Austria — weighs E-Control prices, tank level, consumption, and detour cost to see if a cheaper station pays off.",
+    icon: () => (
+      <img
+        src="https://spritbilanz.tobito.dev/favicon.svg"
+        alt=""
+        className="size-24 rounded-2xl"
+      />
+    ),
+  },
   {
     name: "MyRecipes",
     href: "/apps/recipes",
